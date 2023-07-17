@@ -27,7 +27,9 @@ type DbMap map[int]ToDoItem
 //	   	 (they are lowercase).  Describe why you think this is
 //		 a good design decision.
 //
-// ANSWER: <GOES HERE>
+// ANSWER:/****Fields in the struct are not exported because it has initial lower case letter
+// letter and it means those struct,fields can be accessed inside that package and can't be access from outside of that package.
+// . Main purpose of this is to limit the visibility of fields outside that it follows encapsulation******/
 type ToDo struct {
 	toDoMap    DbMap
 	dbFileName string
@@ -93,8 +95,25 @@ func (t *ToDo) AddItem(item ToDoItem) error {
 	//If everything there are no errors, this function should return nil
 	//at the end to indicate that the item was properly added to the
 	//database.
+	err := t.loadDB()
+	if err != nil {
+		fmt.Println("Error occured while loading the db")
+		return err
+	}
+	_, true := t.toDoMap[item.Id]
+	if true {
+		return errors.New("id already exists")
+	}
+	t.toDoMap[item.Id] = item
 
-	return errors.New("AddItem() is currently not implemented")
+	err1 := t.saveDB()
+	if err1 != nil {
+		fmt.Println("Error in saving to the db")
+		return err1
+	}
+
+	return nil
+	//return errors.New("AddItem() is currently not implemented")
 }
 
 // DeleteItem accepts an item id and removes it from the DB.
@@ -123,7 +142,24 @@ func (t *ToDo) DeleteItem(id int) error {
 	//return nil at the end to indicate that the item was properly deleted
 	//from the database.
 
-	return errors.New("DeleteItem() is currently not implemented")
+	err := t.loadDB()
+	if err != nil {
+		fmt.Println("Error occured while loading the db")
+		return err
+	}
+	_, true := t.toDoMap[id]
+	if !true {
+		fmt.Println("Item doesn't exist")
+		return err
+	}
+	delete(t.toDoMap, id)
+	err1 := t.saveDB()
+	if err1 != nil {
+		fmt.Println("unable to save db")
+		return err1
+	}
+	return nil
+	//return errors.New("DeleteItem() is currently not implemented")
 }
 
 // UpdateItem accepts a ToDoItem and updates it in the DB.
@@ -152,7 +188,24 @@ func (t *ToDo) UpdateItem(item ToDoItem) error {
 	//no errors, this function should return nil at the end to indicate
 	//that the item was properly updated in the database.
 
-	return errors.New("UpdateItem() is currently not implemented")
+	err := t.loadDB()
+	if err != nil {
+		fmt.Println("unable to load the db")
+		return err
+	}
+	_, true := t.toDoMap[item.Id]
+	if !true {
+		fmt.Println("item doesnot exist")
+	}
+	t.toDoMap[item.Id] = item
+
+	err1 := t.saveDB()
+	if err1 != nil {
+		fmt.Println("unable to save")
+		return err1
+	}
+	return nil
+	//return errors.New("UpdateItem() is currently not implemented")
 }
 
 // GetItem accepts an item id and returns the item from the DB.
@@ -181,8 +234,17 @@ func (t *ToDo) GetItem(id int) (ToDoItem, error) {
 	//no errors, this function should return the item requested and nil
 	//as the error value the end to indicate that the item was
 	//properly returned from the database.
-
-	return ToDoItem{}, errors.New("GetItem() is currently not implemented")
+	err := t.loadDB()
+	if err != nil {
+		fmt.Println("unable to load the db")
+		//return ToDoItem{}, err
+	}
+	item, true := t.toDoMap[id]
+	if !true {
+		fmt.Println("item does not exist")
+	}
+	return item, nil
+	//return ToDoItem{}, errors.New("GetItem() is currently not implemented")
 }
 
 // GetAllItems returns all items from the DB.  If successful it
@@ -206,8 +268,16 @@ func (t *ToDo) GetAllItems() ([]ToDoItem, error) {
 	//use the built in append() function in go to add an item in a slice.
 	//Finally, if there were no errors along the way, return the slice
 	//and nil as the error value.
-
-	return nil, errors.New("GetAllItems() is currently not implemented")
+	err := t.loadDB()
+	if err != nil {
+		fmt.Println("unable to load the db")
+	}
+	var list []ToDoItem
+	for _, h := range t.toDoMap {
+		list = append(list, h)
+	}
+	return list, nil
+	//return nil, errors.New("GetAllItems() is currently not implemented")
 }
 
 // PrintItem accepts a ToDoItem and prints it to the console
@@ -266,11 +336,20 @@ func (t *ToDo) ChangeItemDoneStatus(id int, value bool) error {
 	//This function builds on all of the other functions you have
 	//implemented.  It should call GetItem() to get the item from
 	//the DB, then it should call UpdateItem() to update the item
-	//in the DB (after the status is changed).  If there are any
+	//in the DB (after the statusß is changed).  If there are any
 	//errors along the way, return them.  If everything is successful
 	//return nil at the end to indicate that the item was properly
-
-	return errors.New("ChangeItemDoneStatus() is currently not implemented")
+	item, err := t.GetItem(id)
+	if err != nil {
+		return err
+	}
+	item.IsDone = value
+	err = t.UpdateItem(item)
+	if err != nil {
+		return err
+	}
+	return nil
+	//return errors.New("ChangeItemDoneStatus() is currently not implemented")
 }
 
 //------------------------------------------------------------

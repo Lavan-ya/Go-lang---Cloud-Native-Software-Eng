@@ -44,18 +44,19 @@ const (
 //		 flags.  The flag package is not very flexible and can lead to
 //		 some confusing code.
 
-//			 REQUIRED:     Study the code below, and make sure you understand
-//						   how it works.  Go online and readup on how the
-//						   flag package works.  Then, write a nice comment
-//				  		   block to document this function that highights that
-//						   you understand how it works.
+//				 REQUIRED:     Study the code below, and make sure you understand
+//							   how it works.  Go online and readup on how the
+//							   flag package works.  Then, write a nice comment
+//					  		   block to document this function that highights that
+//							   you understand how it works.
 //
-//			 EXTRA CREDIT: The best CLI and command line processor for
-//						   go is called Cobra.  Refactor this function to
-//						   use it.  See github.com/spf13/cobra for information
-//						   on how to use it.
+//				 EXTRA CREDIT: The best CLI and command line processor for
+//							   go is called Cobra.  Refactor this function to
+//							   use it.  See github.com/spf13/cobra for information
+//							   on how to use it.
 //
-//	 YOUR ANSWER: <GOES HERE>
+//		 YOUR ANSWER: Flag is a built-in package used to pass it as an argument to the command and that will perform certain action.
+//	               In the below function seperate flag has been created and each flag has different functionalities.
 func processCmdLineFlags() (AppOptType, error) {
 	flag.StringVar(&dbFileNameFlag, "db", "./data/todo.json", "Name of the database file")
 
