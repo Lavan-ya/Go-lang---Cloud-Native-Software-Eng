@@ -13,23 +13,32 @@ import (
 )
 
 type VoterApi struct {
-	voterList voter.VoterList
+	voterList *voter.VoterList
 }
 
 func NewVoterApi() *VoterApi {
-	return &VoterApi{
-		voterList: voter.VoterList{
-			Voters: make(map[uint64]voter.Voter),
-		},
+	dbHandler, err := voter.NewVoter()
+	if err != nil {
+		return nil
 	}
+
+	return &VoterApi{voterList: dbHandler}
 }
 
+//done
 func (v *VoterApi) DeleteVoter(ctx *gin.Context) {
 	VoterId, _ := strconv.ParseUint(ctx.Param("id"), 10, 64)
-	delete(v.voterList.Voters, VoterId)
-	fmt.Println("Item Deleted successfully")
+	if err := v.voterList.DeleteItem(VoterId); err != nil {
+		log.Println("Error deleting item: ", err)
+		ctx.AbortWithStatus(http.StatusBadRequest)
+		return
+	}
+
+	ctx.Status(http.StatusOK)
+	
 }
 
+//done
 func (v *VoterApi) UpdateVoter(ctx *gin.Context) {
 	VoterId, _ := strconv.ParseUint(ctx.Param("id"), 10, 64)
 	var item voter.Voter
@@ -51,10 +60,10 @@ func (v *VoterApi) UpdateVoter(ctx *gin.Context) {
 	})
 }
 
+//done
 func (v *VoterApi) InsertPoll(ctx *gin.Context) {
 	VoterID, _ := strconv.ParseUint(ctx.Param("id"), 10, 64)
-	//PollID, _ := strconv.ParseUint(ctx.Param("pollid"), 10, 64)
-
+	
 	var requestBody struct {
 		PollID   uint64 `json:"poll_id"`
 		VoteDate string `json:"vote_date"`
@@ -70,16 +79,11 @@ func (v *VoterApi) InsertPoll(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": "Invalid date format"})
 		return
 	}
+    v.voterList.AddTopoll(VoterID,requestBody.PollID,voteDate)
 
-	_, ok := v.voterList.Voters[VoterID]
-	if !ok {
-		fmt.Println("item doesnot exist")
-		return
-	}
-	voter := v.voterList.Voters[VoterID]
-	voter.AddPoll(requestBody.PollID, voteDate)
-	v.voterList.Voters[VoterID] = voter
 }
+
+//done
 func (v *VoterApi) PostVoter(c *gin.Context) {
 	var list voter.Voter
 	if err := c.ShouldBindJSON(&list); err != nil {
@@ -97,15 +101,17 @@ func (v *VoterApi) PostVoter(c *gin.Context) {
 	c.JSON(http.StatusOK, list)
 }
 
+//done
 func (v *VoterApi) GetVoterJson(ctx *gin.Context) {
 	voterID, _ := strconv.ParseUint(ctx.Param("id"), 10, 64)
-	voter := v.voterList.Voters[voterID]
-	ctx.JSON(http.StatusOK, gin.H{
-		"Voter ID":     voter.VoterID,
-		"First Name":   voter.FirstName,
-		"Last Name":    voter.LastName,
-		"Vote History": voter.VoteHistory,
-	})
+	
+	voter,err := v.voterList.GetItem(voterID)
+	if err != nil {
+		log.Println("Item not found: ", err)
+		ctx.AbortWithStatus(http.StatusNotFound)
+		return
+	}
+	ctx.JSON(http.StatusOK, voter)
 }
 
 func (v *VoterApi) GetVoterListJson(ctx *gin.Context) {
@@ -114,30 +120,31 @@ func (v *VoterApi) GetVoterListJson(ctx *gin.Context) {
 	ctx.Data(http.StatusOK, "application/json", b)
 }
 
+//done
 func (v *VoterApi) GetVoterHistory(ctx *gin.Context) {
-	VoterID, _ := strconv.ParseUint(ctx.Param("id"), 10, 64)
-	voter := v.voterList.Voters[VoterID]
-	ctx.JSON(http.StatusOK, gin.H{
-		"Voter ID":      voter.VoterID,
-		"Voter History": voter.VoteHistory,
-	})
-}
-
-func (v *VoterApi) GetVoterPoolid(ctx *gin.Context) {
-	VoterID, _ := strconv.ParseUint(ctx.Param("id"), 10, 64)
-	PollID, _ := strconv.ParseUint(ctx.Param("pollid"), 10, 64)
-	voter := v.voterList.Voters[VoterID]
-	VoteHistory := voter.VoteHistory
-	for _, poll := range VoteHistory {
-		if poll.PollID == PollID {
-			ctx.JSON(http.StatusOK, gin.H{
-				"Poll ID":   poll.PollID,
-				"Poll Date": poll.VoteDate,
-			})
-		}
+	voterID, _ := strconv.ParseUint(ctx.Param("id"), 10, 64)
+	voter,err := v.voterList.GetVoterHistoryItem(voterID)
+	if err != nil {
+		log.Println("Item not found: ", err)
+		ctx.AbortWithStatus(http.StatusNotFound)
+		return
 	}
-
+	ctx.JSON(http.StatusOK, voter)
 }
+
+//done
+func (v *VoterApi) GetVoterPoolid(ctx *gin.Context) {
+	voterID, _ := strconv.ParseUint(ctx.Param("id"), 10, 64)
+	PollID, _ := strconv.ParseUint(ctx.Param("pollid"), 10, 64)
+	voter,err := v.voterList.GetVoterPoolidItem(voterID,PollID)
+	if err != nil {
+		log.Println("Item not found: ", err)
+		ctx.AbortWithStatus(http.StatusNotFound)
+		return
+	}
+	ctx.JSON(http.StatusOK, voter)
+}
+
 func (v *VoterApi) HealthCheck(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{
 		"Status":  "healthy",
