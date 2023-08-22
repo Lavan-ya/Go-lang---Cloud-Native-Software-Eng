@@ -147,20 +147,22 @@ func (v *VoterList) AddVoterlist(item Voter) error {
 	}
 	return nil
 }
-
-func (v *Voter) AddPoll(pollID uint64, voteDate time.Time) {
+/*
+func (v *Voter) AddPoll(pollID uint64, voteDate time.Time) []voterPoll{
 
 	v.VoteHistory = append(v.VoteHistory, voterPoll{PollID: pollID, VoteDate: voteDate})
+	fmt.Println("--------*************--------=====@@@@@@@!!!@$@#$#%$#%$#^$^%$^%",v.VoteHistory)
+	return v.VoteHistory;
 }
-
+*/
 func(v *VoterList) AddTopoll(voterID uint64, pollID uint64, voteDate time.Time) error {
 	redisKey := redisKeyFromId(voterID)
 	var existingItem Voter
 	if err := v.getItemFromRedis(redisKey, &existingItem); err !=nil{
 		return errors.New("item doesnot exist");
 	}
-	existingItem.AddPoll(pollID,voteDate);
-	if _,err := v.jsonHelper.JSONSet(redisKey, ".", existingItem); err != nil {
+	existingItem.VoteHistory=append(existingItem.VoteHistory, voterPoll{PollID: pollID, VoteDate: voteDate})
+	if _,err := v.jsonHelper.JSONSet(redisKey, ".", &existingItem); err != nil {
 		return err
 	}
 	return nil;
@@ -218,4 +220,22 @@ func (v *VoterList) GetVoterPoolidItem(id uint64,pollID uint64) ([]voterPoll,err
 		}
 	}
 	return selectedPollVoteHistory, nil
+}
+
+func(v *VoterList) GetFullItem() ([]Voter,error){
+	var toDoList []Voter
+	var toDoItem Voter
+
+	pattern := RedisKeyPrefix + "*"
+	ks, _ := v.cacheClient.Keys(v.context, pattern).Result()
+	for _, key := range ks {
+		err := v.getItemFromRedis(key, &toDoItem)
+		if err != nil {
+			return []Voter{},nil
+		}
+		toDoList = append(toDoList, toDoItem)
+	}
+
+	return toDoList,nil
+
 }

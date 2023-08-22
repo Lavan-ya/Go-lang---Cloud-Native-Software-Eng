@@ -66,20 +66,20 @@ func (v *VoterApi) InsertPoll(ctx *gin.Context) {
 	
 	var requestBody struct {
 		PollID   uint64 `json:"poll_id"`
-		VoteDate string `json:"vote_date"`
+		VoteDate time.Time `json:"vote_date"`
 	}
 
 	if err := ctx.ShouldBindJSON(&requestBody); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request body"})
 		return
 	}
-
+/*
 	voteDate, err := time.Parse("2006-01-02T15:04:05Z", requestBody.VoteDate)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": "Invalid date format"})
 		return
-	}
-    v.voterList.AddTopoll(VoterID,requestBody.PollID,voteDate)
+	}*/
+    v.voterList.AddTopoll(VoterID,requestBody.PollID,requestBody.VoteDate)
 
 }
 
@@ -91,7 +91,7 @@ func (v *VoterApi) PostVoter(c *gin.Context) {
 		c.AbortWithStatus(http.StatusBadRequest)
 		return
 	}
-
+fmt.Println("Value is -------------------------",list)
 	if err := v.voterList.AddVoterlist(list); err != nil {
 		log.Println("Error adding item: ", err)
 		c.AbortWithStatus(http.StatusInternalServerError)
@@ -115,7 +115,13 @@ func (v *VoterApi) GetVoterJson(ctx *gin.Context) {
 }
 
 func (v *VoterApi) GetVoterListJson(ctx *gin.Context) {
-	b, _ := json.Marshal(v.voterList)
+	voter,err := v.voterList.GetFullItem()
+	if err != nil {
+		log.Println("Item not found: ", err)
+		ctx.AbortWithStatus(http.StatusNotFound)
+		return
+	}
+	b, _ := json.Marshal(voter)
 	ctx.Header("Content-Type", "application/json")
 	ctx.Data(http.StatusOK, "application/json", b)
 }
@@ -154,34 +160,3 @@ func (v *VoterApi) HealthCheck(ctx *gin.Context) {
 	})
 }
 
-/*func (v *VoterApi) AddVoter(voterID uint64, firstName, lastName string) {
-	v.voterList.Voters[voterID] = *voter.NewVoter(voterID, firstName, lastName)
-}
-
-func (v *VoterApi) AddPoll(voterID uint64, pollID uint64) {
-	voter := v.voterList.Voters[voterID]
-	voter.AddPoll(pollID)
-	v.voterList.Voters[voterID] = voter
-}
-
-func (v *VoterApi) GetVoter(voterID uint) voter.Voter {
-	voter := v.voterList.Voters[voterID]
-	return voter
-}
-
-func (v *VoterApi) GetVoterList() voter.VoterList {
-	return v.voterList
-}
-
-func (v *VoterApi) ListAllVoter(c *gin.Context) {
-	voterList, err := v.voterList.GetVoterDetails()
-	if err != nil {
-		log.Println("Error Getting All Items: ", err)
-		c.AbortWithStatus(http.StatusNotFound)
-		return
-	}
-	if voterList == nil {
-		voterList = make([]voter.Voter, 0)
-	}
-	c.JSON(http.StatusOK, voterList)
-}*/
