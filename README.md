@@ -1,4 +1,3 @@
 # Voter-Roster
-These are in-class demonstration files that I used in my cloud native software engineering class
-Please use POSTMAN to test this Voter Roster functionalities. 
-To start the project run docker-compose up
+This is Voter update project where it allows to update the voters history, Voter details and poll details.
+I implemented Docker-compose functionality to run the Go API(containerized) and redis(containerized) which is configured in docker to run using docker-compose up command.
