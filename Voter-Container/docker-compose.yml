@@ -7,9 +7,11 @@ services:
     ports:
       - '6379:6379'
       - '8001:8001'
-  Voter-Container:
-    image: voterapi:latest
-    container_name: beautiful_lumiere
+  voter-container:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    container_name: lava_voter-container
     restart: always
     ports:
       - '1080:1080'
