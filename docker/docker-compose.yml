@@ -60,6 +60,23 @@ services:
       - frontend
       - backend
 
+  votrs-api:
+    image: votrs-api:0.1
+    container_name: votrs-api-1
+    restart: always
+    ports:
+      - '3080:3080'
+    depends_on:
+      cache-init:
+        condition: service_completed_successfully
+    environment:
+      - CACHE_URL=cache:6379
+      - PUBAPI_URL=http://poll-api:1080
+    networks:
+      - frontend
+      - backend
+
+
 
 
 networks:
