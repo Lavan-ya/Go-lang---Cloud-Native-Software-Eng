@@ -1,45 +1,45 @@
 [
-{
-    "PollID": 1,
-    "PollTitle": "Favorite Pet",
-    "PollQuestion": "What type of pet do you like best?",
-    "PollOptions": [
-        {"PollOptionID": 1, "PollOptionValue": "Dog"},
-        {"PollOptionID": 2, "PollOptionValue": "Cat"},
-        {"PollOptionID": 3, "PollOptionValue": "Fish"},
-        {"PollOptionID": 4, "PollOptionValue": "Bird"},
-        {"PollOptionID": 5, "PollOptionValue": "NONE"}
-    ]
-},
-{
-    "PollID": 2,
-    "PollTitle": "Favorite Color",
-    "PollQuestion": "What's your favorite color?",
-    "PollOptions": [
-        {"PollOptionID": 1, "PollOptionValue": "Red"},
-        {"PollOptionID": 2, "PollOptionValue": "Blue"},
-    ]
-},
-{
-    "PollID": 3,
-    "PollTitle": "Favorite Drink",
-    "PollQuestion": "What's your preferred drink in the morning?",
-    "PollOptions": [
-        {"PollOptionID": 1, "PollOptionValue": "Tea"},
-        {"PollOptionID": 2, "PollOptionValue": "Coffee"},
-        {"PollOptionID": 3, "PollOptionValue": "Juice"},
-        {"PollOptionID": 4, "PollOptionValue": "Water"}
-    ]
-},
-{
-    "PollID": 4,
-    "PollTitle": "Preferred Vacation Destination",
-    "PollQuestion": "Where would you like to travel for your next vacation?",
-    "PollOptions": [
-        {"PollOptionID": 1, "PollOptionValue": "Beach"},
-        {"PollOptionID": 2, "PollOptionValue": "Mountains"},
-        {"PollOptionID": 3, "PollOptionValue": "City"},
-        {"PollOptionID": 4, "PollOptionValue": "Countryside"}
-    ]
-}
+    {
+        "PollID": 1,
+        "PollTitle": "Favorite Pet",
+        "PollQuestion": "What type of pet do you like best?",
+        "PollOptions": [
+            {"PollOptionID": 1, "PollOptionValue": "Dog"},
+            {"PollOptionID": 2, "PollOptionValue": "Cat"},
+            {"PollOptionID": 3, "PollOptionValue": "Fish"},
+            {"PollOptionID": 4, "PollOptionValue": "Bird"},
+            {"PollOptionID": 5, "PollOptionValue": "NONE"}
+        ]
+    },
+    {
+        "PollID": 2,
+        "PollTitle": "Favorite Color",
+        "PollQuestion": "What's your favorite color?",
+        "PollOptions": [
+            {"PollOptionID": 1, "PollOptionValue": "Red"},
+            {"PollOptionID": 2, "PollOptionValue": "Blue"}
+        ]
+    },
+    {
+        "PollID": 3,
+        "PollTitle": "Favorite Drink",
+        "PollQuestion": "What's your preferred drink in the morning?",
+        "PollOptions": [
+            {"PollOptionID": 1, "PollOptionValue": "Tea"},
+            {"PollOptionID": 2, "PollOptionValue": "Coffee"},
+            {"PollOptionID": 3, "PollOptionValue": "Juice"},
+            {"PollOptionID": 4, "PollOptionValue": "Water"}
+        ]
+    },
+    {
+        "PollID": 4,
+        "PollTitle": "Preferred Vacation Destination",
+        "PollQuestion": "Where would you like to travel for your next vacation?",
+        "PollOptions": [
+            {"PollOptionID": 1, "PollOptionValue": "Beach"},
+            {"PollOptionID": 2, "PollOptionValue": "Mountains"},
+            {"PollOptionID": 3, "PollOptionValue": "City"},
+            {"PollOptionID": 4, "PollOptionValue": "Countryside"}
+        ]
+    }
 ]

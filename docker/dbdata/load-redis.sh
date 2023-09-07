@@ -7,22 +7,32 @@ apt-get -y install jq
 #delete the database
 redis-cli -h $1 flushdb
 
-#load pubs
-cat /data/pubs.json | jq -c '.[]' |\
+#load polls
+cat /data/poll.json | jq -c '.[]' |\
     while read json_object; do \
-        pubid=$(jq -r '.id' <<< $json_object); \
+        pollid=$(jq -r '.PollID' <<< $json_object); \
         #echo $pubid  \
-        rediscmd="redis-cli -h $1 JSON.set pubs:$pubid . '$json_object'"; \
+        rediscmd="redis-cli -h $1 JSON.set polls:$pollid . '$json_object'"; \
         echo $rediscmd; \
         eval $rediscmd; \
     done 
 
-#load reading list
-cat /data/readinglist.json | jq -c '.[]' |\
+#load voter list
+cat /data/voter.json | jq -c '.[]' |\
     while read json_object; do \
-        rlid=$(jq -r '.id' <<< $json_object); \
+        voterid=$(jq -r '.VoterID' <<< $json_object); \
         #echo $pubid  \
-        rediscmd="redis-cli -h $1 JSON.set publist:$rlid . '$json_object'"; \
+        rediscmd="redis-cli -h $1 JSON.set voter:$voterid . '$json_object'"; \
         echo $rediscmd; \
         eval $rediscmd; \
     done 
+#load votes list
+cat /data/votes.json | jq -c '.[]' |\
+    while read json_object; do \
+        voteid=$(jq -r '.VoteID' <<< $json_object); \
+        #echo $pubid  \
+        rediscmd="redis-cli -h $1 JSON.set votes:$voteid . '$json_object'"; \
+        echo $rediscmd; \
+        eval $rediscmd; \
+    done 
+
