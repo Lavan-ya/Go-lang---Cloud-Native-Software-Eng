@@ -30,8 +30,8 @@ services:
         condition: service_started
 
   poll-api:
-    image: poll-api:0.1
-    container_name: poll-api-1
+    image: pol-api:0.1
+    container_name: pol-api-1
     restart: always
     ports:
       - '1080:1080'
@@ -44,9 +44,9 @@ services:
       - frontend
       - backend
 
-  vote-api:
-    image: vote-api:0.1
-    container_name: vote-api-1
+  votes-api:
+    image: vots-api:0.1
+    container_name: vots-api-1
     restart: always
     ports:
       - '2080:2080'
@@ -54,27 +54,12 @@ services:
       cache-init:
         condition: service_completed_successfully
     environment:
-      - RLAPI_CACHE_URL=cache:6379
-      - RLAPI_PUB_API_URL=http://poll-api:1080 
+      - CACHE_URL=cache:6379
+      - PUBAPI_URL=http://poll-api:1080
     networks:
       - frontend
       - backend
 
-  voter-api:
-    image: voter-api:0.1
-    container_name: voter-api-1
-    restart: always
-    ports:
-      - '3080:3080'
-    depends_on:
-      cache-init:
-        condition: service_completed_successfully
-    environment:
-      - RLAPI_CACHE_URL=cache:6379
-      - RLAPI_PUB_API_URL=http://poll-api:1080 
-    networks:
-      - frontend
-      - backend
 
 
 networks:
