@@ -139,15 +139,7 @@ func (r *VoteAPI) GetPollfromVotes(c *gin.Context) {
 
 	fmt.Printf("%s", pubURL)
 
-	var poll schema.Poll
-	_, err = r.apiClient.R().SetResult(&poll).Get(pubURL)
-	if err != nil {
-		emsg := "Could not get poll from API: (" + pubURL + ")" + err.Error()
-		c.JSON(http.StatusNotFound, gin.H{"error": emsg})
-		return
-	}
-
-	c.JSON(http.StatusOK, poll)
+	c.Redirect(http.StatusMovedPermanently, pubURL)
 }
 
 func (p *VoteAPI) DeleteVote(c *gin.Context) {
