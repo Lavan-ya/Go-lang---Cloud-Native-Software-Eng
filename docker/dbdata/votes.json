@@ -1,0 +1,28 @@
+[
+    {
+        "VoteID": 1,
+        "PollID": 1,
+        "VoterID": 1,
+        "VoteValue": 1
+    },
+    {
+        "VoteID": 2,
+        "PollID": 1,
+        "VoterID": 2,
+        "VoteValue": 2
+    },
+       
+        {
+            "VoteID": 3,
+            "PollID": 3,
+            "VoterID": 3,
+            "VoteValue": 1
+        },
+        
+        {
+            "VoteID": 4,
+            "PollID": 4,
+            "VoterID": 4,
+            "VoteValue": 2
+        }
+]

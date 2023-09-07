@@ -1,0 +1,48 @@
+[
+    {
+        "VoterID": 1,
+        "FirstName": "John",
+        "LastName": "Doe",
+        "VoteHistory": [
+            {
+                "PollID": 1,
+                "VoteDate": "2023-09-06T00:00:00Z"
+            }
+        ]
+    },
+    {
+        "VoterID": 2,
+        "FirstName": "Jane",
+        "LastName": "Smith",
+        "VoteHistory": [
+            {
+                "PollID": 1,
+                "VoteDate": "2023-09-06T01:00:00Z"
+            }
+        ]
+    },
+        
+        {
+            "VoterID": 3,
+            "FirstName": "Alice",
+            "LastName": "Waters",
+            "VoteHistory": [
+                {
+                    "PollID": 1,
+                    "VoteDate": "2023-09-06T02:00:00Z"
+                }
+            ]
+        },
+        
+        {
+            "VoterID": 4,
+            "FirstName": "Bob",
+            "LastName": "Thompson",
+            "VoteHistory": [
+                {
+                    "PollID": 2,
+                    "VoteDate": "2023-09-06T03:00:00Z"
+                }
+            ]
+        }
+]
