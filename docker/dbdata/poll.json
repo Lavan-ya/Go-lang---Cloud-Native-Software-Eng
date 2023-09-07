@@ -14,7 +14,7 @@
     {
         "PollID": 2,
         "PollTitle": "Favorite Color",
-        "PollQuestion": "What's your favorite color?",
+        "PollQuestion": "Whats your favorite color?",
         "PollOptions": [
             {"PollOptionID": 1, "PollOptionValue": "Red"},
             {"PollOptionID": 2, "PollOptionValue": "Blue"}
@@ -23,7 +23,7 @@
     {
         "PollID": 3,
         "PollTitle": "Favorite Drink",
-        "PollQuestion": "What's your preferred drink in the morning?",
+        "PollQuestion": "Whats your preferred drink in the morning?",
         "PollOptions": [
             {"PollOptionID": 1, "PollOptionValue": "Tea"},
             {"PollOptionID": 2, "PollOptionValue": "Coffee"},

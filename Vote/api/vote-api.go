@@ -1,8 +1,7 @@
-package voteapi
+package api
 
 import (
 	"Assignment2/vote"
-	voter "Assignment2/vote"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -17,7 +16,7 @@ type VoteApi struct {
 }
 
 func NewVoteApi() *VoteApi {
-	dbHandler, err := voter.NewVote()
+	dbHandler, err := vote.NewVote()
 	if err != nil {
 		return nil
 	}
@@ -32,57 +31,56 @@ func (v *VoteApi) PostVoter(c *gin.Context) {
 		c.AbortWithStatus(http.StatusBadRequest)
 		return
 	}
-fmt.Println("Value is -------------------------",list)
+	fmt.Println("Value is -------------------------", list)
 	if err := v.voteList.AddItem(list); err != nil {
 		log.Println("Error adding item: ", err)
 		c.AbortWithStatus(http.StatusInternalServerError)
 		return
 	}
 	list.Links = []vote.Link{
-        {Rel: "self", Href: fmt.Sprintf("/voters/%d", list.VoteID)},
-        {Rel: "delete", Href: fmt.Sprintf("/voters/%d/delete", list.VoteID)},
-        // ... Add more links as needed
-    }
+		{Rel: "self", Href: fmt.Sprintf("/voters/%d", list.VoteID)},
+		{Rel: "delete", Href: fmt.Sprintf("/voters/%d/delete", list.VoteID)},
+		// ... Add more links as needed
+	}
 	c.JSON(http.StatusOK, list)
 }
 
 func (v *VoteApi) GetVoterListJson(ctx *gin.Context) {
-	voter,err := v.voteList.GetFullItem()
+	voter, err := v.voteList.GetFullItem()
 	if err != nil {
 		log.Println("Item not found: ", err)
 		ctx.AbortWithStatus(http.StatusNotFound)
 		return
 	}
 	for i := range voter {
-        voter[i].Links = []vote.Link{
-            {Rel: "self", Href: fmt.Sprintf("/voters/%d", voter[i].VoteID)},
-            {Rel: "delete", Href: fmt.Sprintf("/voters/%d/delete", voter[i].VoteID)},
-            // ... Add more links as needed
-        }
-    }
+		voter[i].Links = []vote.Link{
+			{Rel: "self", Href: fmt.Sprintf("/voters/%d", voter[i].VoteID)},
+			{Rel: "delete", Href: fmt.Sprintf("/voters/%d/delete", voter[i].VoteID)},
+			// ... Add more links as needed
+		}
+	}
 
 	//b, _ := json.Marshal(voter)
 	//ctx.Header("Content-Type", "application/json")
 	//ctx.Data(http.StatusOK, "application/json", b)
-    if ctx.DefaultQuery("format", "json") == "html" {
-        htmlResp := "<ul>"
-        for _, v := range voter {
-            htmlResp += "<li>"
-            htmlResp += fmt.Sprintf("VoterID: %d, PollID: %d", v.VoterID, v.PollID)
-            for _, link := range v.Links {
-                htmlResp += fmt.Sprintf(" [<a href='%s'>%s</a>]", link.Href, link.Rel)
-            }
-            htmlResp += "</li>"
-        }
-        htmlResp += "</ul>"
-        ctx.Data(http.StatusOK, "text/html; charset=utf-8", []byte(htmlResp))
-    } else {
-        b, _ := json.Marshal(voter)
-        ctx.Header("Content-Type", "application/json")
-        ctx.Data(http.StatusOK, "application/json", b)
-    }
+	if ctx.DefaultQuery("format", "json") == "html" {
+		htmlResp := "<ul>"
+		for _, v := range voter {
+			htmlResp += "<li>"
+			htmlResp += fmt.Sprintf("VoterID: %d, PollID: %d", v.VoterID, v.PollID)
+			for _, link := range v.Links {
+				htmlResp += fmt.Sprintf(" [<a href='%s'>%s</a>]", link.Href, link.Rel)
+			}
+			htmlResp += "</li>"
+		}
+		htmlResp += "</ul>"
+		ctx.Data(http.StatusOK, "text/html; charset=utf-8", []byte(htmlResp))
+	} else {
+		b, _ := json.Marshal(voter)
+		ctx.Header("Content-Type", "application/json")
+		ctx.Data(http.StatusOK, "application/json", b)
+	}
 }
-
 
 func (v *VoteApi) DeleteVoter(ctx *gin.Context) {
 	VoterId, _ := strconv.ParseUint(ctx.Param("id"), 10, 64)
@@ -93,5 +91,5 @@ func (v *VoteApi) DeleteVoter(ctx *gin.Context) {
 	}
 
 	ctx.Status(http.StatusOK)
-	
+
 }

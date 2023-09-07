@@ -1,9 +1,10 @@
 package main
 
 import (
-	voteapi "Assignment2/vote-api"
 	"flag"
 	"fmt"
+
+	"Assignment2/api"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -26,14 +27,13 @@ func main() {
 	r := gin.Default()
 	r.Use(cors.Default())
 
-	v2 :=voteapi.NewVoteApi()
+	v2 := api.NewVoteApi()
 
 	//vote API
 
-	r.POST("/vote",v2.PostVoter)
-	r.GET("/vote",v2.GetVoterListJson)
-	r.DELETE("/vote/:id",v2.DeleteVoter)
-	
+	r.POST("/vote", v2.PostVoter)
+	r.GET("/vote", v2.GetVoterListJson)
+	r.DELETE("/vote/:id", v2.DeleteVoter)
 
 	serverPath := fmt.Sprintf("%s:%d", hostFlag, portFlag)
 	r.Run(serverPath)
