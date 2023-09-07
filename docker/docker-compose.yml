@@ -30,7 +30,7 @@ services:
         condition: service_started
 
   poll-api:
-    image: pol-api:0.1
+    image: amarlava/pol-api:0.1
     container_name: pol-api-1
     restart: always
     ports:
@@ -45,7 +45,7 @@ services:
       - backend
 
   votes-api:
-    image: vots-api:0.1
+    image: amarlava/vots-api:0.1
     container_name: vots-api-1
     restart: always
     ports:
@@ -61,7 +61,7 @@ services:
       - backend
 
   votrs-api:
-    image: votrs-api:0.1
+    image: amarlava/votrs-api:0.1
     container_name: votrs-api-1
     restart: always
     ports:
